@@ -15,7 +15,7 @@ endif()
 
 
 option(BUILD_DOCS "Build and Install Documents (Requires Doxygen)" OFF)
-option(${CMAKE_PROJECT_NAME}_BUILD_TESTING "Build and run tests" OFF)
+option(${PROJECT_NAME}_BUILD_TESTING "Build and run tests" OFF)
 option(ONNX_USE_QNN "Will fetch a version of Onnx Runtime that only supports QNN and CPU" OFF)
 set(LIBONNXRUNTIME_VERSION 1.29.0) # minimum required is 1.28.0 to get PR #28733 and 1.29.0 to get PR #30512
 
@@ -29,19 +29,19 @@ include(cmake/FetchONNXRuntime.cmake)
 ## Define Target
 ## =============
 
-add_library(${CMAKE_PROJECT_NAME} INTERFACE)
-target_include_directories(${CMAKE_PROJECT_NAME}
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
   INTERFACE
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
       $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/include>
 )
-target_compile_features(${CMAKE_PROJECT_NAME} INTERFACE cxx_std_14)
-target_link_libraries(${CMAKE_PROJECT_NAME}
+target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
+target_link_libraries(${PROJECT_NAME}
     INTERFACE magic_enum::magic_enum
     INTERFACE ${ONXX_RT_LIB_DIR}/libonnxruntime.so 
     )
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCS)
+if(PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCS)
   find_package(Doxygen REQUIRED dot)
   if(Doxygen_FOUND)
     add_subdirectory(docs)
@@ -55,13 +55,13 @@ endif()
 
 include(FetchContent)
 if(${CMAKE_VERSION} VERSION_LESS 3.14)
-  include(cmake/add_FetchContent_MakeAvailable.cmake)
+  include(cmake/FetchContent_MakeAvailable.cmake)
 endif()
 
 
 
 ## flag RMOLIB_BUILD_TESTING for enable testing anyway
-if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR ${CMAKE_PROJECT_NAME}_BUILD_TESTING) AND BUILD_TESTING)
+if((PROJECT_NAME STREQUAL PROJECT_NAME OR ${PROJECT_NAME}_BUILD_TESTING) AND BUILD_TESTING)
   if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
   endif()
