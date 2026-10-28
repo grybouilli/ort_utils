@@ -31,6 +31,13 @@ struct ort_tensor_buffer {
     std::copy(other.buffer_memory.begin(), other.buffer_memory.end(),
               buffer_memory.begin());
   }
+
+  void copy_from(std::span<const T> src) {
+    if (src.size() != buffer_memory.size()) {
+      throw std::invalid_argument("size mismatch");
+    }
+    std::copy(src.begin(), src.end(), buffer_memory.begin());
+  }
   std::array<int64_t, Dim> shape;
   std::vector<T> buffer_memory;
   Ort::Value tensor;
