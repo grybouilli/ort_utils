@@ -2,6 +2,7 @@ include(FetchContent)
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 if(ONNX_USE_QNN)
+    set(CMAKE_ANDROID_ARCH_ABI "arm64-v8a")
     set(ONXX_RT_URL      "https://repo1.maven.org/maven2/com/microsoft/onnxruntime/onnxruntime-android-qnn/${LIBONNXRUNTIME_VERSION}/onnxruntime-android-qnn-${LIBONNXRUNTIME_VERSION}.aar")
     set(QNN_API_URL "https://apigwx-aws.qualcomm.com/qsc/public/v1/api/download/software/sdks/Qualcomm_AI_Runtime_Community/All/2.42.0.251225/v2.42.0.251225.zip")
     set(QNN_API_DL_DIR ${CMAKE_BINARY_DIR}/import)
