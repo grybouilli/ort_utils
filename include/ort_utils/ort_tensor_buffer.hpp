@@ -24,14 +24,13 @@ struct ort_tensor_buffer {
                                         shape.data(), shape.size(),
                                         ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT16);
     }
-
-    void copy_from(const ort_tensor_buffer& other) {
-      assert(shape == other.shape);
-      std::copy(other.buffer_memory.begin(), other.buffer_memory.end(),
-                buffer_memory.begin());
-    }
   }
 
+  void copy_from(const ort_tensor_buffer& other) {
+    assert(shape == other.shape);
+    std::copy(other.buffer_memory.begin(), other.buffer_memory.end(),
+              buffer_memory.begin());
+  }
   std::array<int64_t, Dim> shape;
   std::vector<T> buffer_memory;
   Ort::Value tensor;
