@@ -38,7 +38,7 @@ target_include_directories(${PROJECT_NAME}
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
 target_link_libraries(${PROJECT_NAME}
     INTERFACE magic_enum::magic_enum
-    INTERFACE ${ONXX_RT_LIB_DIR}/libonnxruntime.so 
+    INTERFACE Ort::Ort 
     )
 
 if(PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCS)
