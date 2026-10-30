@@ -61,7 +61,13 @@ class OrtSessionHandler {
       std::cout << "Adding " << entry << ": " << value << std::endl;
       m_session_options.AddConfigEntry(entry.c_str(), value.c_str());
     }
-    m_session = Ort::Session(m_env, model_filename.c_str(), m_session_options);
+    try {
+      m_session =
+          Ort::Session(m_env, model_filename.c_str(), m_session_options);
+    } catch (const Ort::Exception& e) {
+      std::cerr << e.what() << std::endl;
+      throw e;
+    }
     std::cout << "Session initiated" << std::endl;
   }
 
