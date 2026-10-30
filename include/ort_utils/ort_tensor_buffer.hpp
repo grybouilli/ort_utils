@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <format>
 #include <numeric>
 #include <onnxruntime_cxx_api.h>
 #include <vector>
@@ -34,7 +35,9 @@ struct ort_tensor_buffer {
 
   void copy_from(std::span<const T> src) {
     if (src.size() != buffer_memory.size()) {
-      throw std::invalid_argument("size mismatch");
+      throw std::invalid_argument(
+          std::format("ort_tensor_buffer::{}: size mismatch ({} != {})",
+                      __FUNCTION__, src.size(), buffer_memory.size()));
     }
     std::copy(src.begin(), src.end(), buffer_memory.begin());
   }
