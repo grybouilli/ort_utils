@@ -8,9 +8,9 @@ project(ort_utils
 )
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 20)       
-elseif(${CMAKE_CXX_STANDARD} LESS 20) 
-  message( FATAL_ERROR "Ort utils needs CMAKE_CXX_STANDARD to be at least 20. Current value: ${CMAKE_CXX_STANDARD}")
+  set(CMAKE_CXX_STANDARD 20)
+elseif(${CMAKE_CXX_STANDARD} LESS 20)
+  message(FATAL_ERROR "Ort utils needs CMAKE_CXX_STANDARD to be at least 20. Current value: ${CMAKE_CXX_STANDARD}")
 endif()
 
 
@@ -18,6 +18,9 @@ option(BUILD_DOCS "Build and Install Documents (Requires Doxygen)" OFF)
 option(${PROJECT_NAME}_BUILD_TESTING "Build and run tests" OFF)
 option(ONNX_USE_QNN "Will fetch a version of Onnx Runtime that only supports QNN and CPU" OFF)
 set(LIBONNXRUNTIME_VERSION 1.29.0) # minimum required is 1.28.0 to get PR #28733 and 1.29.0 to get PR #30512
+
+option(ORT_UTILS_USE_QNN_EP_PLUGIN "Use QNN EP as plugin library" OFF)
+set(ORT_UTILS_QNN_EP_PLUGIN_PATH "/data/local/tmp/libonnxruntime_providers_qnn.so" CACHE FILEPATH "Path to QNN EP plugin library")
 
 ## Make sure that custom modules like FindXYZ are found
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -32,15 +35,19 @@ include(cmake/FetchONNXRuntime.cmake)
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME}
   INTERFACE
-      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/include>
 )
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_14)
 target_link_libraries(${PROJECT_NAME}
-    INTERFACE magic_enum::magic_enum
-    INTERFACE Ort::Ort 
-    )
-
+  INTERFACE magic_enum::magic_enum
+  INTERFACE Ort::Ort
+)
+if(ORT_UTILS_USE_QNN_EP_PLUGIN)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE
+    ORT_UTILS_USE_QNN_EP_PLUGIN
+    ORT_UTILS_QNN_EP_PLUGIN_PATH="${ORT_UTILS_QNN_EP_PLUGIN_PATH}")
+endif()
 if(PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_DOCS)
   find_package(Doxygen REQUIRED dot)
   if(Doxygen_FOUND)
