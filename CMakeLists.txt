@@ -44,7 +44,7 @@ target_link_libraries(${PROJECT_NAME}
   INTERFACE Ort::Ort
 )
 if(ORT_UTILS_USE_QNN_EP_PLUGIN)
-  target_compile_definitions(${PROJECT_NAME} PRIVATE
+  target_compile_definitions(${PROJECT_NAME} INTERFACE
     ORT_UTILS_USE_QNN_EP_PLUGIN
     ORT_UTILS_QNN_EP_PLUGIN_PATH="${ORT_UTILS_QNN_EP_PLUGIN_PATH}")
 endif()
