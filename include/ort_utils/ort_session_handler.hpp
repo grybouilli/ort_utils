@@ -36,7 +36,8 @@ class OrtSessionHandler {
 
 #ifdef ORT_UTILS_USE_QNN_EP_PLUGIN
     // Plugin path: register the shared library, then select its devices.
-    if (ep_name == magic_enum::enum_name(SupportedEPs::QNNExecutionProvider)) {
+    if (ep_name == magic_enum::enum_name(SupportedEPs::QNNExecutionProvider) ||
+        ep_name == kQnnRegistrationName) {
       try {
         m_env.RegisterExecutionProviderLibrary(
             kQnnRegistrationName,
